@@ -1,0 +1,77 @@
+---
+title: "Extrair dados do Breedbase"
+author: "Chris Simoes"
+date: "2023-06-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+here::i_am("extraindoDados.Rmd")
+knitr::opts_chunk$set(echo = TRUE)
+myPackages <- installed.packages()
+if(!"QBMS" %in% myPackages[,1]){ install.packages("QBMS")}
+library("QBMS")
+
+```
+
+## R Markdown
+
+Conectando atraves do BrAPI na base de dados
+
+```{r conectando}
+# Sempre BreedBase server
+# Ainda preciso corrigirpara pedir a senha
+set_qbms_config("https://sempre.breedbase.org/brapi/v1/calls/", 
+                time_out = 100, no_auth = TRUE, engine = "breedbase")
+
+# por enquanto nao precisa usar 
+# login_bms()
+
+# Ainda consta como cassava. Vou corrigir para milho
+list_crops()
+set_crop("Cassava")
+
+# lista dos progranas
+list_programs()
+
+# select a breeding program by name
+set_program("SuBR")
+```
+
+## Extraindo os dados
+
+Exemplo de como extrair os dados do breedbase.
+
+```{r trials}
+
+# Esse comando mos a lista das pastas dentro do programa que foi selecionado
+list_trials()
+
+# Selecionando uma pasta especifica
+set_trial("SuBR_2023_24_Nursery")
+
+# Mostra o que tem disponivel de fenotipo na pasta selecionada
+get_trial_obs_ontology()
+
+# Aqui sim (Study) vai mostrar os ensaios que existem dentro da pasta
+studies <- list_studies()
+studies
+
+# Selecionando o primeiro ensaio
+set_study(studies$studyName[1])
+
+
+# extraindo metadata do ensaio selecionado
+info <- get_study_info()
+info$trialDbId
+
+# Extraindo os dados do ensaio
+data <- get_study_data()
+str(data)
+
+germplasm <- unique(data$germplasmName)
+germplasm
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
