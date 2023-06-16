@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm(list = ls())
 here::i_am("extraindoDados.Rmd")
 knitr::opts_chunk$set(echo = TRUE)
 myPackages <- installed.packages()
@@ -47,7 +48,7 @@ Exemplo de como extrair os dados do breedbase.
 # Esse comando mos a lista das pastas dentro do programa que foi selecionado
 list_trials()
 
-# Selecionando uma pasta especifica
+# Selecionando uma pasta especifica (so funciona com uma pasta)
 set_trial("SuBR_2023_24_Nursery")
 
 # Mostra o que tem disponivel de fenotipo na pasta selecionada
@@ -57,7 +58,7 @@ get_trial_obs_ontology()
 studies <- list_studies()
 studies
 
-# Selecionando o primeiro ensaio
+# Selecionando o primeiro ensaio (So funciona com um ensaio por vez)
 set_study(studies$studyName[1])
 
 
@@ -73,5 +74,18 @@ germplasm <- unique(data$germplasmName)
 germplasm
 
 ```
+
+## Extraindo todos os dados de uma pasta
+Extraindo todos os dados dentro de uma pasta
+
+```{r multiLocal}
+
+MET <- get_trial_data()
+
+unique(MET$studyName)
+
+```
+
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
